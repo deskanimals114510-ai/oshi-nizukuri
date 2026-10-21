@@ -1,0 +1,211 @@
+/* 推しと荷づくり。荷札(luggage tag)を一点の見せ場にし、他は静かに保つ。
+   --oshi / --oshi-ink は選んだ推し色でJSが差し替える(ink は文字・チェック欄用、背景に対し4.5:1以上) */
+:root {
+  --paper: #f4f6fb;
+  --card: #ffffff;
+  --ink: #1d2242;
+  --sub: #545a76;
+  --line: #cbd2e6;
+  --line-strong: #7d849f; /* 操作できる部品の枠。白・紙色の両方に3:1以上 */
+  --kraft: #e9dcc3;
+  --oshi: #ec5c9b;
+  --oshi-ink: #b02a66;
+  --radius: 10px;
+  --font-body: "M PLUS 2", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-display: "Dela Gothic One", "M PLUS 2", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+a { color: var(--ink); text-underline-offset: 3px; }
+a:hover { color: var(--oshi-ink); }
+:focus-visible { outline: 3px solid var(--oshi-ink); outline-offset: 2px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip-link { position: absolute; left: 16px; top: -48px; background: var(--ink); color: #fff; padding: 8px 12px; border-radius: 6px; z-index: 10; }
+.skip-link:focus { top: 8px; color: #fff; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+/* ヘッダー */
+.site-header { border-bottom: 1px solid var(--line); background: var(--card); }
+.site-header .wrap { display: flex; align-items: center; min-height: 56px; }
+.site-name { font-family: var(--font-display); font-size: 1.15rem; text-decoration: none; letter-spacing: .04em; }
+
+/* レイアウト */
+.layout { display: grid; gap: 32px; padding-top: 28px; padding-bottom: 48px; }
+@media (min-width: 900px) {
+  .layout { grid-template-columns: 380px 1fr; gap: 48px; align-items: start; }
+  /* 低い画面のノートPCでも進捗とボタンが見えるよう、左カラムの中だけでスクロールさせる */
+  .side { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; scrollbar-width: thin; padding: 4px; margin: -4px; }
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 5vw, 2.5rem);
+  line-height: 1.25;
+  margin: 0 0 12px;
+}
+.lead { margin: 0 0 12px; color: var(--sub); }
+.pr-note { font-size: .9rem; color: var(--ink); margin: 0 0 20px; }
+.pr-note b { display: inline-block; border: 1px solid var(--ink); border-radius: 4px; padding: 0 5px; margin-right: 6px; font-size: .75rem; line-height: 1.5; }
+
+/* 荷札 */
+.tag {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px var(--radius) var(--radius) 6px;
+  padding: 40px 20px 20px 28px;
+  clip-path: polygon(0 26px, 26px 0, 100% 0, 100% 100%, 0 100%);
+}
+.tag::before { /* 推し色の帯 */
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: 0; width: 8px;
+  background: var(--oshi);
+}
+.tag-hole {
+  position: absolute; left: 26px; top: 14px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--paper); border: 4px solid var(--kraft);
+}
+.conds { display: grid; gap: 14px; }
+.cond { border: 0; margin: 0; padding: 0; min-width: 0; }
+.cond legend { font-weight: 700; font-size: .85rem; color: var(--sub); padding: 0; margin-bottom: 6px; }
+.legend-sub { font-weight: 400; margin-left: 4px; }
+.chips, .swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { position: relative; }
+.chip input, .swatch input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.chip span {
+  display: inline-block; padding: 8px 14px; border: 1.5px solid var(--line-strong); border-radius: 999px;
+  font-size: .9rem; line-height: 1.5; background: var(--card);
+}
+.chip input:checked + span { background: var(--oshi-ink); border-color: var(--oshi-ink); color: #fff; font-weight: 700; }
+.chip input:focus-visible + span { outline: 3px solid var(--oshi-ink); outline-offset: 2px; }
+.swatch {
+  position: relative; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--sw); border: 2px solid var(--card); box-shadow: 0 0 0 1.5px var(--line-strong);
+}
+.swatch:has(input:checked) { box-shadow: 0 0 0 2px var(--card), 0 0 0 4.5px var(--ink); }
+.swatch:has(input:focus-visible) { outline: 3px solid var(--ink); outline-offset: 5px; }
+
+.tag-progress { position: relative; margin-top: 18px; padding-top: 14px; border-top: 1.5px dashed var(--line); }
+.no-js .tag-progress { display: none; }
+.noscript { margin: 12px 0 0; font-size: .85rem; color: var(--sub); }
+.count { margin: 0 0 6px; font-family: var(--font-display); font-size: 1.3rem; }
+.bar { height: 10px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line-strong); overflow: hidden; }
+.bar-fill { height: 100%; width: 0; background: var(--oshi); transition: width .25s ease; }
+.tag-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.tag-actions button {
+  font: inherit; font-size: .85rem; color: var(--ink); background: var(--card);
+  border: 1.5px solid var(--line-strong); border-radius: 8px; padding: 8px 14px; cursor: pointer;
+}
+.tag-actions button.armed { border-color: var(--oshi-ink); color: var(--oshi-ink); font-weight: 700; }
+.jump { align-self: center; font-size: .9rem; font-weight: 700; padding: 8px 4px; }
+@media (min-width: 900px) { .jump { display: none; } }
+.tag-actions button:hover { border-color: var(--ink); }
+.stamp {
+  display: inline-block; margin: 0 0 10px 4px;
+  font-family: var(--font-display); font-size: 1rem; color: var(--oshi-ink);
+  border: 3px solid var(--oshi-ink); border-radius: 8px; padding: 2px 10px;
+  transform: rotate(-8deg); background: var(--card);
+}
+.tag.just-done .stamp { animation: stamp .35s ease-out; }
+@keyframes stamp { from { transform: rotate(-8deg) scale(1.6); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
+
+/* スマホ用の小さな残数表示 */
+.mini-count {
+  position: sticky; top: 0; z-index: 5; margin: 0 -16px 8px; padding: 8px 16px;
+  background: color-mix(in srgb, var(--paper) 92%, transparent); border-bottom: 1px solid var(--line);
+  font-weight: 700; font-size: .9rem;
+}
+@media (min-width: 900px) { .mini-count { display: none; } }
+
+/* チェックリスト */
+.cat { margin-bottom: 28px; }
+.cat-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  margin: 0 0 6px; padding-bottom: 6px; border-bottom: 2px solid var(--ink);
+}
+.cat h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.25rem; margin: 0; }
+.cat-count { font-family: var(--font-body); font-size: .85rem; font-weight: 700; color: var(--sub); }
+.items { list-style: none; margin: 0; padding: 0; }
+.item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.item[hidden] { display: none; }
+.item input {
+  appearance: none; -webkit-appearance: none; flex: none;
+  width: 24px; height: 24px; margin: 3px 0 0; border: 2px solid var(--ink); border-radius: 6px;
+  background: var(--card); cursor: pointer; display: grid; place-content: center;
+}
+.item input::after {
+  content: ""; width: 12px; height: 7px; border-left: 3px solid #fff; border-bottom: 3px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px); opacity: 0;
+}
+.item input:checked { background: var(--oshi-ink); border-color: var(--oshi-ink); }
+.item input:checked::after { opacity: 1; }
+.item-body { min-width: 0; flex: 1; }
+.item-name { font-weight: 700; cursor: pointer; }
+.item input:checked + .item-body .item-name { text-decoration: line-through; text-decoration-color: var(--oshi-ink); text-decoration-thickness: 2px; color: var(--sub); }
+.cheap {
+  display: inline-block; margin-left: 8px; font-size: .75rem; color: var(--sub);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; vertical-align: 2px;
+}
+.note { margin: 2px 0 0; font-size: .9rem; color: var(--sub); }
+.products { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.products a {
+  display: inline-block; font-size: .85rem; text-decoration: none;
+  border: 1.5px solid var(--line-strong); border-radius: 6px; padding: 3px 10px; background: var(--card);
+}
+.products a::after { content: "Amazon"; margin-left: 8px; font-size: .72rem; color: var(--sub); }
+.products a:hover { border-color: var(--oshi-ink); }
+
+.about { margin-top: 36px; font-size: .92rem; color: var(--sub); }
+.about h2 { font-size: 1rem; color: var(--ink); margin: 0 0 6px; }
+.about p { margin: 0 0 8px; max-width: 40em; }
+.updated { font-size: .85rem; }
+
+/* 説明ページ */
+.prose { max-width: 760px; padding-top: 28px; padding-bottom: 48px; }
+.prose h1 { font-size: 1.7rem; }
+.prose h2 { font-size: 1.1rem; margin: 28px 0 6px; }
+.prose p, .prose ul { margin: 0 0 10px; }
+
+/* フッター */
+.site-footer { border-top: 1px solid var(--line); background: var(--card); padding: 24px 0 32px; font-size: .82rem; color: var(--sub); }
+.site-footer p { margin: 0 0 4px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px !important; }
+.footer-links a { color: var(--sub); display: inline-block; padding: 4px 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bar-fill { transition: none; }
+  .tag.just-done .stamp { animation: none; }
+}
+
+@media print {
+  .site-header, .site-footer, .pr-note, .lead, .tag-actions, .swatches, .mini-count, .products, .about, .skip-link, .tag-hole { display: none !important; }
+  body { background: #fff; }
+  .layout { display: block; padding: 0; }
+  .side { position: static; }
+  .tag { clip-path: none; border: 0; padding: 0; }
+  .tag::before { display: none; }
+  /* 紙は未チェックの持ち物リストとして出す。条件は選んだものだけを1行に */
+  .stamp, .bar, .count, .cond-color, .noscript { display: none !important; }
+  .tag-progress { border: 0; margin: 0; padding: 0; }
+  .conds { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .cond legend { margin: 0 6px 0 0; float: left; }
+  .chip:not(:has(input:checked)) { display: none; }
+  .chip input:checked + span { background: none; color: var(--ink); border-color: var(--ink); padding: 0 8px; }
+  .item { break-inside: avoid; padding: 6px 0; }
+  .item input, .item input:checked { background: #fff; border-color: var(--ink); }
+  .item input::after { opacity: 0 !important; }
+  .item input:checked + .item-body .item-name { text-decoration: none; color: var(--ink); }
+}
+
+.stamp[hidden] { display: none; }
