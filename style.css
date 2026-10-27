@@ -237,7 +237,7 @@ h1 {
   .tag { clip-path: none; border: 0; padding: 0; }
   .tag::before { display: none; }
   /* 紙は未チェックの持ち物リストとして出す。条件は選んだものだけを1行に */
-  .stamp, .bar, .count, .cond-color, .noscript { display: none !important; }
+  .stamp, .bar, .count, .cond-color, .noscript, .reading, .item .note.more { display: none !important; }
   .tag-progress { border: 0; margin: 0; padding: 0; }
   .conds { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .cond legend { margin: 0 6px 0 0; float: left; }
