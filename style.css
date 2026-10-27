@@ -55,6 +55,8 @@ h1 {
 }
 .lead { margin: 0 0 12px; color: var(--sub); }
 .pr-note { font-size: .9rem; color: var(--ink); margin: 0 0 20px; }
+.minor-note { font-size: .85rem; color: var(--sub); margin: -12px 0 20px; }
+.article .minor-note { margin: 0 0 16px; }
 .pr-note b { display: inline-block; border: 1px solid var(--ink); border-radius: 4px; padding: 0 5px; margin-right: 6px; font-size: .75rem; line-height: 1.5; }
 
 /* 荷札 */
@@ -177,6 +179,45 @@ h1 {
 .prose h2 { font-size: 1.1rem; margin: 28px 0 6px; }
 .prose p, .prose ul { margin: 0 0 10px; }
 
+/* 記事 */
+.reading { margin-top: 36px; }
+.reading h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.15rem; margin: 0 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.reading ul { list-style: none; margin: 0; padding: 0; }
+.reading li { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.reading li a { font-weight: 700; }
+.reading li p { margin: 2px 0 0; font-size: .9rem; color: var(--sub); }
+.article { line-height: 1.85; }
+.article h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.6rem, 4.5vw, 2.1rem); line-height: 1.35; margin: 8px 0 8px; }
+.article h2 { font-size: 1.25rem; margin: 40px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); scroll-margin-top: 16px; }
+.article h3 { font-size: 1.05rem; margin: 24px 0 6px; }
+.article .lead { color: var(--ink); }
+.breadcrumb { font-size: .85rem; color: var(--sub); }
+.breadcrumb a { color: var(--sub); }
+.toc { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 18px; margin: 20px 0; }
+.toc p { margin: 0 0 4px; font-weight: 700; }
+.toc ol { margin: 0; padding-left: 1.4em; }
+.table-wrap { overflow-x: auto; margin: 12px 0 16px; }
+.table-wrap table { border-collapse: collapse; width: 100%; background: var(--card); font-size: .92rem; }
+.table-wrap.wide table { min-width: 520px; }
+.scroll-hint { display: none; font-size: .8rem; color: var(--sub); margin: -8px 0 16px; }
+@media (max-width: 560px) { .scroll-hint { display: block; } }
+.table-wrap caption { text-align: left; font-weight: 700; padding-bottom: 6px; }
+.table-wrap th, .table-wrap td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+.table-wrap thead th { background: var(--paper); }
+.table-wrap tbody th { font-weight: 700; background: var(--card); }
+.callout { background: var(--card); border-left: 6px solid var(--oshi); padding: 10px 14px; border-radius: 0 var(--radius) var(--radius) 0; }
+.products-article { flex-direction: column; gap: 10px; margin: 12px 0 16px; }
+.products-article li { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 14px; }
+.products-article a { border: 0; padding: 0; background: none; font-weight: 700; text-decoration: underline; }
+.products-article a::after { content: "Amazonで見る ↗" / ""; display: block; width: fit-content; margin-top: 6px; font-size: .82rem; color: var(--ink); text-decoration: none; border: 1.5px solid var(--line-strong); border-radius: 999px; padding: 2px 12px; }
+.products-article .note { margin-top: 4px; }
+.note.more { margin-top: 4px; }
+.note.more a { color: var(--ink); font-weight: 700; }
+.cta { margin: 28px 0 0; }
+.cta a { display: inline-block; font-weight: 700; background: var(--ink); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 999px; }
+.cta a:hover { color: #fff; background: var(--oshi-ink); }
+.sources { font-size: .88rem; word-break: break-all; }
+
 /* フッター */
 .site-footer { border-top: 1px solid var(--line); background: var(--card); padding: 24px 0 32px; font-size: .82rem; color: var(--sub); }
 .site-footer p { margin: 0 0 4px; }
@@ -189,7 +230,7 @@ h1 {
 }
 
 @media print {
-  .site-header, .site-footer, .pr-note, .lead, .tag-actions, .swatches, .mini-count, .products, .about, .skip-link, .tag-hole { display: none !important; }
+  .site-header, .site-footer, .pr-note, .minor-note, .lead, .tag-actions, .swatches, .mini-count, .products, .about, .skip-link, .tag-hole { display: none !important; }
   body { background: #fff; }
   .layout { display: block; padding: 0; }
   .side { position: static; }
