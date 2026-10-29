@@ -202,6 +202,7 @@ h1 {
 .scroll-hint { display: none; font-size: .8rem; color: var(--sub); margin: -8px 0 16px; }
 @media (max-width: 560px) { .scroll-hint { display: block; } }
 .table-wrap caption { text-align: left; font-weight: 700; padding-bottom: 6px; }
+.table-cap { font-weight: 700; margin: 12px 0 -6px; }
 .table-wrap th, .table-wrap td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
 .table-wrap thead th { background: var(--paper); }
 .table-wrap tbody th { font-weight: 700; background: var(--card); }
