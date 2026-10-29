@@ -28,7 +28,7 @@ body {
 a { color: var(--ink); text-underline-offset: 3px; }
 a:hover { color: var(--oshi-ink); }
 :focus-visible { outline: 3px solid var(--oshi-ink); outline-offset: 2px; }
-.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip-link { position: absolute; left: 16px; top: -48px; background: var(--ink); color: #fff; padding: 8px 12px; border-radius: 6px; z-index: 10; }
 .skip-link:focus { top: 8px; color: #fff; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
@@ -55,9 +55,11 @@ h1 {
 }
 .lead { margin: 0 0 12px; color: var(--sub); }
 .pr-note { font-size: .9rem; color: var(--ink); margin: 0 0 20px; }
-.minor-note { font-size: .85rem; color: var(--sub); margin: -12px 0 20px; }
+.minor-note { font-size: .85rem; color: var(--sub); margin: 16px 0 0; }
 .article .minor-note { margin: 0 0 16px; }
-.pr-note b { display: inline-block; border: 1px solid var(--ink); border-radius: 4px; padding: 0 5px; margin-right: 6px; font-size: .75rem; line-height: 1.5; }
+.how { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; margin: 0 0 12px; font-weight: 700; }
+.how-sub { font-weight: 400; font-size: .85rem; color: var(--sub); }
+.pr-note b { display: inline-block; border: 1px solid var(--ink); border-radius: 4px; padding: 0 5px; margin-right: 6px; font-size: .8rem; line-height: 1.5; }
 
 /* 荷札 */
 .tag {
@@ -86,7 +88,7 @@ h1 {
 .chip { position: relative; }
 .chip input, .swatch input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
 .chip span {
-  display: inline-block; padding: 8px 14px; border: 1.5px solid var(--line-strong); border-radius: 999px;
+  display: inline-block; padding: 10px 14px; border: 1.5px solid var(--line-strong); border-radius: 999px;
   font-size: .9rem; line-height: 1.5; background: var(--card);
 }
 .chip input:checked + span { background: var(--oshi-ink); border-color: var(--oshi-ink); color: #fff; font-weight: 700; }
@@ -103,7 +105,7 @@ h1 {
 .noscript { margin: 12px 0 0; font-size: .85rem; color: var(--sub); }
 .count { margin: 0 0 6px; font-family: var(--font-display); font-size: 1.3rem; }
 .bar { height: 10px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line-strong); overflow: hidden; }
-.bar-fill { height: 100%; width: 0; background: var(--oshi); transition: width .25s ease; }
+.bar-fill { height: 100%; width: 0; background: var(--oshi-ink); transition: width .25s ease; }
 .tag-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .tag-actions button {
   font: inherit; font-size: .85rem; color: var(--ink); background: var(--card);
@@ -127,7 +129,11 @@ h1 {
   position: sticky; top: 0; z-index: 5; margin: 0 -16px 8px; padding: 8px 16px;
   background: color-mix(in srgb, var(--paper) 92%, transparent); border-bottom: 1px solid var(--line);
   font-weight: 700; font-size: .9rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  transition: opacity .2s;
 }
+.mini-count:not(.away) { opacity: 0; pointer-events: none; }
+.mini-count a { font-size: .85rem; padding: 6px 0; }
 @media (min-width: 900px) { .mini-count { display: none; } }
 
 /* チェックリスト */
@@ -139,11 +145,11 @@ h1 {
 .cat h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.25rem; margin: 0; }
 .cat-count { font-family: var(--font-body); font-size: .85rem; font-weight: 700; color: var(--sub); }
 .items { list-style: none; margin: 0; padding: 0; }
-.item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.item { position: relative; display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
 .item[hidden] { display: none; }
 .item input {
   appearance: none; -webkit-appearance: none; flex: none;
-  width: 24px; height: 24px; margin: 3px 0 0; border: 2px solid var(--ink); border-radius: 6px;
+  width: 26px; height: 26px; margin: 2px 0 0; border: 2px solid var(--ink); border-radius: 6px;
   background: var(--card); cursor: pointer; display: grid; place-content: center;
 }
 .item input::after {
@@ -154,9 +160,11 @@ h1 {
 .item input:checked::after { opacity: 1; }
 .item-body { min-width: 0; flex: 1; }
 .item-name { font-weight: 700; cursor: pointer; }
+.item-name::after { content: ""; position: absolute; inset: 0; }
+.item a { position: relative; z-index: 1; }
 .item input:checked + .item-body .item-name { text-decoration: line-through; text-decoration-color: var(--oshi-ink); text-decoration-thickness: 2px; color: var(--sub); }
 .cheap {
-  display: inline-block; margin-left: 8px; font-size: .75rem; color: var(--sub);
+  display: inline-block; margin-left: 8px; font-size: .8rem; color: var(--sub);
   border: 1px solid var(--line); border-radius: 4px; padding: 0 6px; vertical-align: 2px;
 }
 .note { margin: 2px 0 0; font-size: .9rem; color: var(--sub); }
@@ -165,7 +173,7 @@ h1 {
   display: inline-block; font-size: .85rem; text-decoration: none;
   border: 1.5px solid var(--line-strong); border-radius: 6px; padding: 3px 10px; background: var(--card);
 }
-.products a::after { content: "Amazon"; margin-left: 8px; font-size: .72rem; color: var(--sub); }
+.products a::after { content: "Amazon ›" / ""; margin-left: 8px; font-size: .8rem; color: var(--sub); white-space: nowrap; }
 .products a:hover { border-color: var(--oshi-ink); }
 
 .about { margin-top: 36px; font-size: .92rem; color: var(--sub); }
@@ -193,6 +201,9 @@ h1 {
 .article .lead { color: var(--ink); }
 .breadcrumb { font-size: .85rem; color: var(--sub); }
 .breadcrumb a { color: var(--sub); }
+.to-list { margin: 0 0 4px; }
+.to-list a { display: block; position: relative; background: var(--card); border: 1px solid var(--line); border-left: 6px solid var(--oshi); border-radius: 0 var(--radius) var(--radius) 0; padding: 10px 36px 10px 14px; font-weight: 700; text-decoration: none; }
+.to-list a::after { content: "›" / ""; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 1.3rem; }
 .toc { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 18px; margin: 20px 0; }
 .toc p { margin: 0 0 4px; font-weight: 700; }
 .toc ol { margin: 0; padding-left: 1.4em; }
@@ -210,7 +221,7 @@ h1 {
 .products-article { flex-direction: column; gap: 10px; margin: 12px 0 16px; }
 .products-article li { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 14px; }
 .products-article a { border: 0; padding: 0; background: none; font-weight: 700; text-decoration: underline; }
-.products-article a::after { content: "Amazonで見る ↗" / ""; display: block; width: fit-content; margin-top: 6px; font-size: .82rem; color: var(--ink); text-decoration: none; border: 1.5px solid var(--line-strong); border-radius: 999px; padding: 2px 12px; }
+.products-article a::after { content: "Amazonで見る ›" / ""; display: block; width: fit-content; margin-top: 6px; font-size: .82rem; color: var(--ink); text-decoration: none; border: 1.5px solid var(--line-strong); border-radius: 999px; padding: 2px 12px; }
 .products-article .note { margin-top: 4px; }
 .note.more { margin-top: 4px; }
 .note.more a { color: var(--ink); font-weight: 700; }
@@ -231,7 +242,7 @@ h1 {
 }
 
 @media print {
-  .site-header, .site-footer, .pr-note, .minor-note, .lead, .tag-actions, .swatches, .mini-count, .products, .about, .skip-link, .tag-hole { display: none !important; }
+  .site-header, .site-footer, .pr-note, .minor-note, .how, .lead, .tag-actions, .swatches, .mini-count, .products, .about, .skip-link, .tag-hole { display: none !important; }
   body { background: #fff; }
   .layout { display: block; padding: 0; }
   .side { position: static; }

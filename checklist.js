@@ -70,6 +70,12 @@
     document.documentElement.style.setProperty('--oshi-ink', c.ink);
   }
 
+  // 同じ文が続くと読み上げない環境があるため、いったん空にしてから入れる
+  function say(text) {
+    status.textContent = '';
+    requestAnimationFrame(() => { status.textContent = text; });
+  }
+
   // announce: 条件を変えた時と完了した時だけ読み上げる(チェックのたびに読むとうるさいため)
   function update(opts) {
     const o = opts || {};
@@ -107,7 +113,7 @@
         window.gtag('event', 'checklist_complete', { days: days, scene: scene, move: move, item_count: total });
       }
     } else if (o.announce) {
-      status.textContent = `条件に合う持ち物は${total}個です`;
+      say(`条件に合う持ち物は${total}個です`);
     }
     wasDone = isDone;
   }
@@ -140,8 +146,9 @@
   resetBtn.addEventListener('click', () => {
     if (!armed) {
       armed = true;
-      resetBtn.textContent = 'もう一度押すと全部外れます';
+      resetBtn.textContent = 'もう一度押す';
       resetBtn.classList.add('armed');
+      say('もう一度押すと、チェックが全部外れます');
       clearTimeout(armTimer);
       armTimer = setTimeout(disarm, 4000);
       return;
@@ -151,7 +158,19 @@
     boxes.forEach((b) => { b.checked = false; });
     update();
     save();
-    status.textContent = 'チェックを全部外しました';
+    say('チェックを全部外しました');
+    resetBtn.textContent = '外しました'; // 画面でも結果が分かるよう、少しの間だけ表示する
+    armTimer = setTimeout(disarm, 2000);
   });
+
+  // スマホの追従表示は、荷札が画面から外れた時だけ出す(荷札の件数と2重に並ばないように)
+  const mini = document.getElementById('mini');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      mini.classList.toggle('away', !entries[0].isIntersecting);
+    }).observe(tag);
+  } else {
+    mini.classList.add('away');
+  }
   document.getElementById('print').addEventListener('click', () => window.print());
 })();
